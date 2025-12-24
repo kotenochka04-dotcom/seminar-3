@@ -1,0 +1,630 @@
+ЗАДАЧА 1.
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+int main() {
+    const double v0 = 50.0;      // начальная скорость
+    const double g = 9.8;        // ускорение свободного падения
+    const double dt = 1.0;       // шаг времени (1 секунда)
+
+    if (v0 <= 0) {
+        cout << "Oshibka: v0 dolzhen byt' > 0!" << endl;
+        return 1;
+    }
+
+    vector<double> times;        // вектор времён
+    vector<double> heights;      // вектор высот
+
+    // Резервируем память заранее (оптимизация)
+    times.reserve(static_cast<int>(v0 * 2 / g / dt) + 1);
+    heights.reserve(static_cast<int>(v0 * 2 / g / dt) + 1);
+
+    // Цикл моделирования
+    for (double t = 0.0; t <= 1000; t += dt) {
+        double h = v0 * t - 0.5 * g * t * t; // формула высоты
+        if (h < 0) break; // если ракета упала - прекращаем
+        times.push_back(t);
+        heights.push_back(h);
+    }
+
+    // Вывод таблицы
+    cout << setw(10) << "t (c)"
+         << setw(15) << "h (m)" << endl;
+    cout << string(25, '-') << endl;
+    for (size_t i = 0; i < times.size(); ++i) {
+        cout << fixed << setprecision(2)
+             << setw(10) << times[i]
+             << setw(15) << heights[i] << endl;
+    }
+
+    return 0;
+}
+
+
+ЗАДАЧА 2.
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <algorithm> // для max_element, distance
+using namespace std;
+
+int main() {
+    // Данные из задачи 1
+    const double v0 = 50.0;
+    const double g = 9.8;
+    const double dt = 1.0;
+
+    vector<double> times;
+    vector<double> heights;
+
+    // Моделирование
+    for (double t = 0.0; t <= 1000; t += dt) {
+        double h = v0 * t - 0.5 * g * t * t;
+        if (h < 0) break;
+        times.push_back(t);
+        heights.push_back(h);
+    }
+
+    if (heights.empty()) {
+        cout << "Dannyh net." << endl;
+        return 1;
+    }
+
+    // Поиск максимальной высоты с помощью STL
+    auto max_it = max_element(heights.begin(), heights.end());
+    size_t idx = distance(heights.begin(), max_it);
+
+    cout << fixed << setprecision(2);
+    cout << "Maksimal'naya vysota: " << *max_it << " m" << endl;
+    cout << "Vremya dostizheniya: " << times[idx] << " c" << endl;
+
+    return 0;
+}
+
+
+ЗАДАЧА 3.
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+int main() {
+    const double v0 = 50.0;
+    const double g = 9.8;
+    const double dt = 1.0;
+    const double t_max = v0 / g * 2; // время до падения
+
+    vector<double> times;
+    vector<double> velocities;
+
+    // Заполнение векторов
+    for (double t = 0.0; t <= t_max; t += dt) {
+        double v = v0 - g * t;
+        times.push_back(t);
+        velocities.push_back(v);
+        if (v < -v0) break; // остановка при сильном отрицании
+    }
+
+    // Вывод таблицы
+    cout << setw(10) << "t (c)"
+         << setw(15) << "v (m/s)" << endl;
+    cout << string(25, '-') << endl;
+    for (size_t i = 0; i < times.size(); ++i) {
+        cout << fixed << setprecision(2)
+             << setw(10) << times[i]
+             << setw(15) << velocities[i] << endl;
+    }
+
+    return 0;
+}
+
+
+ЗАДАЧА 4.
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <numeric> // для accumulate
+using namespace std;
+
+int main() {
+    // Используем данные из задачи 3
+    const double v0 = 50.0;
+    const double g = 9.8;
+    const double dt = 1.0;
+    const double t_max = v0 / g * 2;
+
+    vector<double> velocities;
+
+    for (double t = 0.0; t <= t_max; t += dt) {
+        velocities.push_back(v0 - g * t);
+    }
+
+    if (velocities.empty()) {
+        cout << "Vektor skorostey pust." << endl;
+        return 1;
+    }
+
+    // Суммирование с помощью accumulate
+    double sum = accumulate(velocities.begin(), velocities.end(), 0.0);
+    double avg = sum / velocities.size();
+
+    cout << fixed << setprecision(2);
+    cout << "Srednyaya skorost' za vremya polyota: " << avg << " m/s" << endl;
+
+    return 0;
+}
+
+
+ЗАДАЧА 5.
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+struct Point {
+    double x, y, z;
+};
+
+int main() {
+    // Начальные скорости
+    double vx = 30.0, vy = 20.0, vz = 40.0;
+    double dt = 1.0;
+    double t_max = 10.0;
+
+    // Начальные координаты
+    double x = 0, y = 0, z = 0;
+
+    vector<Point> traj;
+    traj.reserve(static_cast<int>(t_max / dt) + 1);
+
+    // Моделирование без ускорений (равномерное движение)
+    for (double t = 0; t <= t_max; t += dt) {
+        x += vx * dt;
+        y += vy * dt;
+        z += vz * dt;
+        traj.push_back({x, y, z});
+    }
+
+    // Вывод таблицы
+    cout << setw(10) << "t (c)"
+         << setw(15) << "x (m)"
+         << setw(15) << "y (m)"
+         << setw(15) << "z (m)" << endl;
+    cout << string(55, '-') << endl;
+
+    double t = 0;
+    for (const auto& p : traj) {
+        cout << fixed << setprecision(2)
+             << setw(10) << t
+             << setw(15) << p.x
+             << setw(15) << p.y
+             << setw(15) << p.z << endl;
+        t += dt;
+    }
+
+    return 0;
+}
+
+
+ЗАДАЧА 6.
+#include <iostream>
+#include <vector>
+#include <algorithm> // для remove_if
+#include <iomanip>
+using namespace std;
+
+int main() {
+    // Создаем тестовый вектор высот
+    vector<double> heights = {15.0, 5.0, 20.0, 8.0, 30.0, 3.0, 25.0};
+
+    cout << "Ishodnye vysoty: ";
+    for (double h : heights) cout << h << " ";
+    cout << endl;
+
+    // Удаляем все значения ниже 10 м
+    auto new_end = remove_if(heights.begin(), heights.end(),
+                             [](double h) { return h < 10.0; });
+    heights.erase(new_end, heights.end());
+
+    cout << "Posle udaleniya (<10 m): ";
+    for (double h : heights) cout << h << " ";
+    cout << endl;
+
+    return 0;
+}
+
+
+ЗАДАЧА 7.
+#include <iostream>
+#include <vector>
+#include <algorithm> // для find_if
+#include <iomanip>
+using namespace std;
+
+int main() {
+    // Данные из задачи 1
+    const double v0 = 50.0;
+    const double g = 9.8;
+    const double dt = 1.0;
+
+    vector<double> times;
+    vector<double> heights;
+
+    for (double t = 0.0; t <= 1000; t += dt) {
+        double h = v0 * t - 0.5 * g * t * t;
+        times.push_back(t);
+        heights.push_back(h);
+        if (h < 0) break;
+    }
+
+    // Поиск первого момента, когда высота <= 0
+    auto it = find_if(heights.begin(), heights.end(),
+                      [](double h) { return h <= 0.0; });
+
+    if (it == heights.end()) {
+        cout << "Padeniya ne bylo v diapazone." << endl;
+    } else {
+        size_t idx = distance(heights.begin(), it);
+        cout << fixed << setprecision(2);
+        cout << "Moment padeniya: t = " << times[idx] << " c" << endl;
+        cout << "Vysota v etot moment: h = " << *it << " m" << endl;
+    }
+
+    return 0;
+}
+
+
+ЗАДАЧА 8.
+#include <iostream>
+#include <vector>
+#include <algorithm> // для max_element, find_if
+#include <iomanip>
+using namespace std;
+
+int main() {
+    // Две ракеты с разными начальными скоростями
+    const double v0_1 = 50.0, v0_2 = 60.0;
+    const double g = 9.8;
+    const double dt = 0.5;
+
+    // Моделирование первой ракеты
+    vector<double> times1, heights1;
+    for (double t = 0; t <= 1000; t += dt) {
+        double h = v0_1 * t - 0.5 * g * t * t;
+        times1.push_back(t);
+        heights1.push_back(h);
+        if (h < 0) break;
+    }
+
+    // Моделирование второй ракеты
+    vector<double> times2, heights2;
+    for (double t = 0; t <= 1000; t += dt) {
+        double h = v0_2 * t - 0.5 * g * t * t;
+        times2.push_back(t);
+        heights2.push_back(h);
+        if (h < 0) break;
+    }
+
+    // Максимальные высоты
+    auto max_it1 = max_element(heights1.begin(), heights1.end());
+    auto max_it2 = max_element(heights2.begin(), heights2.end());
+    size_t idx_max1 = distance(heights1.begin(), max_it1);
+    size_t idx_max2 = distance(heights2.begin(), max_it2);
+
+    // Моменты падения
+    auto fall_it1 = find_if(heights1.begin(), heights1.end(),
+                           [](double h) { return h <= 0.0; });
+    auto fall_it2 = find_if(heights2.begin(), heights2.end(),
+                           [](double h) { return h <= 0.0; });
+
+    double t_fall1 = (fall_it1 != heights1.end()) ? times1[distance(heights1.begin(), fall_it1)] : -1;
+    double t_fall2 = (fall_it2 != heights2.end()) ? times2[distance(heights2.begin(), fall_it2)] : -1;
+
+    // Вывод результатов
+    cout << fixed << setprecision(2);
+    cout << "Sravnenie dvuh raket:" << endl;
+    cout << "---------------------" << endl;
+    cout << "Raketa 1: max = " << *max_it1 << " m (t = " << times1[idx_max1] << " c), "
+         << "vremya padeniya = " << t_fall1 << " c" << endl;
+    cout << "Raketa 2: max = " << *max_it2 << " m (t = " << times2[idx_max2] << " c), "
+         << "vremya padeniya = " << t_fall2 << " c" << endl;
+    cout << endl;
+
+    if (*max_it1 > *max_it2) {
+        cout << "Raketa 1 podnyalas' vyshe." << endl;
+    } else if (*max_it2 > *max_it1) {
+        cout << "Raketa 2 podnyalas' vyshe." << endl;
+    } else {
+        cout << "Vysoty odinakovy." << endl;
+    }
+
+    if (t_fall1 > t_fall2) {
+        cout << "Raketa 1 do'l'she v vozduhe." << endl;
+    } else if (t_fall2 > t_fall1) {
+        cout << "Raketa 2 do'l'she v vozduhe." << endl;
+    } else {
+        cout << "Vremya polyota odinakovo." << endl;
+    }
+
+    return 0;
+}
+
+
+ЗАДАЧА 9.
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <cstdlib> // для rand
+#include <ctime>   // для time
+using namespace std;
+
+int main() {
+    srand(time(0)); // инициализация генератора случайных чисел
+
+    // Создаем "зашумленные" данные высоты
+    vector<double> h;
+    const int n = 10;
+    for (int i = 0; i < n; ++i) {
+        double base = 50.0 + i * 5.0; // линейный рост
+        double noise = (rand() % 100) / 50.0 - 1.0; // шум от -1 до +1
+        h.push_back(base + noise);
+    }
+
+    // Сглаживание скользящим средним (окно 3)
+    vector<double> smoothed(h.size());
+
+    // Границы оставляем как есть
+    if (!h.empty()) {
+        smoothed[0] = h[0];
+        smoothed[h.size() - 1] = h[h.size() - 1];
+    }
+
+    // Основная часть
+    for (size_t i = 1; i + 1 < h.size(); ++i) {
+        smoothed[i] = (h[i - 1] + h[i] + h[i + 1]) / 3.0;
+    }
+
+    // Вывод в две колонки
+    cout << setw(10) << "Ishodnye" << setw(15) << "Sglazhennye" << endl;
+    cout << string(25, '-') << endl;
+    for (size_t i = 0; i < h.size(); ++i) {
+        cout << fixed << setprecision(2)
+             << setw(10) << h[i]
+             << setw(15) << smoothed[i] << endl;
+    }
+
+    return 0;
+}
+
+
+ЗАДАЧА 10.
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+// Класс Ракета
+class Rocket {
+private:
+    double x, y, z;     // координаты
+    double vx, vy, vz;  // скорости
+
+public:
+    // Конструктор
+    Rocket(double start_x, double start_y, double start_z,
+           double start_vx, double start_vy, double start_vz)
+        : x(start_x), y(start_y), z(start_z),
+          vx(start_vx), vy(start_vy), vz(start_vz) {}
+
+    // Обновление положения за время dt
+    void updatePosition(double dt) {
+        x += vx * dt;
+        y += vy * dt;
+        z += vz * dt;
+    }
+
+    // Получение текущих координат
+    void getPosition(double& out_x, double& out_y, double& out_z) const {
+        out_x = x;
+        out_y = y;
+        out_z = z;
+    }
+};
+
+int main() {
+    const double dt = 1.0;
+    const double T = 10.0; // время симуляции
+
+    // Создаем отряд из 5 ракет с разными параметрами
+    vector<Rocket> squad;
+    squad.reserve(5);
+
+    // Инициализация ракет
+    squad.push_back(Rocket(0, 0, 0, 30, 0, 50));   // ракета 1
+    squad.push_back(Rocket(0, 0, 0, 40, 10, 45));  // ракета 2
+    squad.push_back(Rocket(0, 0, 0, 25, -5, 60));  // ракета 3
+    squad.push_back(Rocket(0, 0, 0, 35, 5, 55));   // ракета 4
+    squad.push_back(Rocket(0, 0, 0, 45, -10, 40)); // ракета 5
+
+    // Массив для хранения конечных позиций
+    vector<vector<double>> finalPositions(squad.size(), vector<double>(3));
+
+    // Симуляция
+    for (double t = 0; t <= T; t += dt) {
+        for (size_t i = 0; i < squad.size(); ++i) {
+            squad[i].updatePosition(dt);
+        }
+    }
+
+    // Сбор конечных позиций
+    for (size_t i = 0; i < squad.size(); ++i) {
+        double x, y, z;
+        squad[i].getPosition(x, y, z);
+        finalPositions[i][0] = x;
+        finalPositions[i][1] = y;
+        finalPositions[i][2] = z;
+    }
+
+    // Вывод результатов
+    cout << "Konechnye polozheniya raket posle " << T << " sekund:" << endl;
+    cout << setw(10) << "Raketa" << setw(15) << "x (m)"
+         << setw(15) << "y (m)" << setw(15) << "z (m)" << endl;
+    cout << string(55, '-') << endl;
+
+    for (size_t i = 0; i < squad.size(); ++i) {
+        cout << fixed << setprecision(2)
+             << setw(10) << i + 1
+             << setw(15) << finalPositions[i][0]
+             << setw(15) << finalPositions[i][1]
+             << setw(15) << finalPositions[i][2] << endl;
+    }
+
+    return 0;
+}
+
+
+ЗАДАЧА 11.
+#include <iostream>
+#include <vector>
+#include <algorithm> // для max_element
+using namespace std;
+
+int main() {
+    const double v0 = 60.0;
+    const double g = 9.8;
+    const double dt = 0.5;
+
+    vector<double> times;
+    vector<double> heights;
+
+    // Моделирование
+    for (double t = 0; t <= 1000; t += dt) {
+        double h = v0 * t - 0.5 * g * t * t;
+        if (h < 0) break;
+        times.push_back(t);
+        heights.push_back(h);
+    }
+
+    if (heights.empty()) {
+        cout << "Dannyh net." << endl;
+        return 1;
+    }
+
+    auto max_it = max_element(heights.begin(), heights.end());
+    size_t idx = distance(heights.begin(), max_it);
+
+    cout << "Maksimal'naya vysota: " << *max_it << " m" << endl;
+    cout << "Vremya dostizheniya: " << times[idx] << " c" << endl;
+
+    return 0;
+}
+
+
+ЗАДАЧА 12.
+#include <iostream>
+#include <vector>
+#include <algorithm> // для count
+using namespace std;
+
+int main() {
+    // Тестовые данные датчика ускорения
+    vector<double> sensor_data = {0.1, 0.0, 2.3, 0.0, 1.5, 0.0, 3.2, 0.0, 0.0, 4.5};
+
+    // Подсчет нулевых значений
+    int zero_count = count(sensor_data.begin(), sensor_data.end(), 0.0);
+
+    cout << "Kolichestvo nulevyh pokazaniy datchika: " << zero_count << endl;
+
+    return 0;
+}
+
+
+ЗАДАЧА 13.
+#include <iostream>
+#include <vector>
+#include <algorithm> // для remove_if
+using namespace std;
+
+int main() {
+    // Тестовые данные температуры двигателя
+    vector<double> temperatures = {150, 180, -150, 190, 250, 210, -50, 220, 300, 170};
+
+    cout << "Ishodnye dannye: ";
+    for (double t : temperatures) cout << t << " ";
+    cout << endl;
+
+    // Удаление ошибочных значений (< -100 или > 200)
+    auto new_end = remove_if(temperatures.begin(), temperatures.end(),
+                             [](double t) { return t < -100 || t > 200; });
+    temperatures.erase(new_end, temperatures.end());
+
+    cout << "Ochishchennye dannye: ";
+    for (double t : temperatures) cout << t << " ";
+    cout << endl;
+
+    return 0;
+}
+
+
+ЗАДАЧА 14.
+#include <iostream>
+#include <vector>
+#include <numeric>   // для adjacent_difference, accumulate
+#include <cmath>     // для fabs
+#include <algorithm> // для transform
+using namespace std;
+
+int main() {
+    // Координаты ракеты вдоль оси y
+    vector<double> y_coords = {0.0, 10.5, 25.3, 42.7, 60.0, 75.2};
+
+    // Вычисляем смещения (разности соседних координат)
+    vector<double> displacements(y_coords.size());
+    adjacent_difference(y_coords.begin(), y_coords.end(), displacements.begin());
+
+    // Первый элемент - это сама координата, его исключаем
+    if (!displacements.empty()) displacements[0] = 0;
+
+    // Берем модули смещений
+    vector<double> abs_displacements(displacements.size());
+    transform(displacements.begin(), displacements.end(), abs_displacements.begin(),
+              [](double d) { return fabs(d); });
+
+    // Суммируем все смещения
+    double total_path = accumulate(abs_displacements.begin(), abs_displacements.end(), 0.0);
+
+    cout << "Summarnyy put' raketi: " << total_path << " m" << endl;
+
+    return 0;
+}
+
+
+ЗАДАЧА 15.
+#include <iostream>
+#include <vector>
+#include <algorithm> // для sort, unique
+using namespace std;
+
+int main() {
+    // Координаты X из разных экспериментов
+    vector<double> x_coords = {15.2, 7.8, 15.2, 3.5, 7.8, 22.1, 3.5, 15.2, 30.4, 7.8};
+
+    cout << "Ishodnye koordinati: ";
+    for (double x : x_coords) cout << x << " ";
+    cout << endl;
+
+    // 1. Сортировка
+    sort(x_coords.begin(), x_coords.end());
+
+    // 2. Удаление дубликатов
+    auto last = unique(x_coords.begin(), x_coords.end());
+    x_coords.erase(last, x_coords.end());
+
+    cout << "Posle sortirovki i udaleniya dublykatorov: ";
+    for (double x : x_coords) cout << x << " ";
+    cout << endl;
+
+    return 0;
+}
