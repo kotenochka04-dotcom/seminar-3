@@ -1,4 +1,4 @@
-ЗАДАЧА 1.
+//ЗАДАЧА 1.
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -43,7 +43,7 @@ int main() {
 }
 
 
-ЗАДАЧА 2.
+//ЗАДАЧА 2.
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -84,7 +84,7 @@ int main() {
 }
 
 
-ЗАДАЧА 3.
+//ЗАДАЧА 3.
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -121,7 +121,7 @@ int main() {
 }
 
 
-ЗАДАЧА 4.
+//ЗАДАЧА 4.
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -157,7 +157,7 @@ int main() {
 }
 
 
-ЗАДАЧА 5.
+//ЗАДАЧА 5.
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -208,7 +208,7 @@ int main() {
 }
 
 
-ЗАДАЧА 6.
+//ЗАДАЧА 6.
 #include <iostream>
 #include <vector>
 #include <algorithm> // для remove_if
@@ -236,7 +236,7 @@ int main() {
 }
 
 
-ЗАДАЧА 7.
+//ЗАДАЧА 7.
 #include <iostream>
 #include <vector>
 #include <algorithm> // для find_if
@@ -276,7 +276,7 @@ int main() {
 }
 
 
-ЗАДАЧА 8.
+//ЗАДАЧА 8.
 #include <iostream>
 #include <vector>
 #include <algorithm> // для max_element, find_if
@@ -352,7 +352,7 @@ int main() {
 }
 
 
-ЗАДАЧА 9.
+//ЗАДАЧА 9.
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -399,7 +399,7 @@ int main() {
 }
 
 
-ЗАДАЧА 10.
+//ЗАДАЧА 10.
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -485,7 +485,7 @@ int main() {
 }
 
 
-ЗАДАЧА 11.
+//ЗАДАЧА 11.
 #include <iostream>
 #include <vector>
 #include <algorithm> // для max_element
@@ -522,7 +522,7 @@ int main() {
 }
 
 
-ЗАДАЧА 12.
+//ЗАДАЧА 12.
 #include <iostream>
 #include <vector>
 #include <algorithm> // для count
@@ -541,7 +541,7 @@ int main() {
 }
 
 
-ЗАДАЧА 13.
+//ЗАДАЧА 13.
 #include <iostream>
 #include <vector>
 #include <algorithm> // для remove_if
@@ -568,7 +568,7 @@ int main() {
 }
 
 
-ЗАДАЧА 14.
+//ЗАДАЧА 14.
 #include <iostream>
 #include <vector>
 #include <numeric>   // для adjacent_difference, accumulate
@@ -601,7 +601,7 @@ int main() {
 }
 
 
-ЗАДАЧА 15.
+//ЗАДАЧА 15.
 #include <iostream>
 #include <vector>
 #include <algorithm> // для sort, unique
